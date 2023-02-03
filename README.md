@@ -9,7 +9,7 @@ cd backend
 make init
 ```
 
-Update `.docker/.env` and `.make/.env` with your configuration.
+Update `backend/.env` and `backend/.docker/.env` with your configuration.
 
 Build containers and install Laravel and Octane:
 
@@ -37,7 +37,7 @@ cd frontend
 make init
 ```
 
-Update `.docker/.env` and `.make/.env` with your configuration.
+Update `frontend/.env` and `frontend/.docker/.env` with your configuration.
 
 Build containers and install Next.js:
 
