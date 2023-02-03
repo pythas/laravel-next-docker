@@ -78,5 +78,5 @@ networks:
     name: api
 
   proxy:
-    name: ${DOCKER_PROXY_NETWORK}
+    name: proxy
     external: true

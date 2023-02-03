@@ -6,8 +6,6 @@ MAKEFLAGS += --no-builtin-rules
 -include .make/.env
 -include .docker/.env
 
-TAG=latest
-
 DEFAULT_GOAL := help
 
 # Enable BuildKit
@@ -20,10 +18,10 @@ export DOCKER_BUILDKIT
 # Services
 DOCKER_SERVICE_PHP_BASE:=php-base
 
+# Docker
 DOCKER_DIR:=./.docker
 DOCKER_COMPOSE_FILE=$(DOCKER_DIR)/docker-compose.yaml
 DOCKER_COMPOSE_FILE_DEV=$(DOCKER_DIR)/docker-compose.dev.yaml
-
 DOCKER_COMPOSE_COMMAND:=docker compose
 DOCKER_COMPOSE:=ENV=$(ENV) \
 	TAG=$(TAG) \
@@ -53,21 +51,25 @@ validate:
 
 .PHONY: install
 install: docker-build
+	# Install Laravel
 	$(DOCKER_COMPOSE) run --rm --no-deps api \
 		composer create-project --prefer-dist laravel/laravel .
 
+	# Fix permissions
 	sudo chown -R $(shell id -u):$(shell id -g) ./src
 
+	# Update Laravel .env
 	sed -i "s/DB_HOST=127.0.0.1/DB_HOST=mysql/g" ./src/.env
 	sed -i "s/DB_DATABASE=laravel/DB_DATABASE=$(DB_DATABASE)/g" ./src/.env
 	sed -i "s/DB_USERNAME=root/DB_USERNAME=$(DB_USERNAME)/g" ./src/.env
 	sed -i "s/DB_PASSWORD=/DB_PASSWORD=$(DB_PASSWORD)/g" ./src/.env
-
 	sed -i "s/REDIS_HOST=127.0.0.1/REDIS_HOST=redis/g" ./src/.env
 
+	# Install Octane
 	$(DOCKER_COMPOSE) run --rm --no-deps api \
 		composer require laravel/octane
 
+	# Configure Octane
 	$(DOCKER_COMPOSE) run --rm --no-deps api \
 	    php artisan octane:install --server=swoole
 
@@ -81,8 +83,11 @@ docker-build-image: validate
 
 .PHONY: docker-build
 docker-build: docker-build-php docker-build-image
-	docker network inspect $(DOCKER_PROXY_NETWORK) >/dev/null 2>&1 || \
-    	docker network create $(DOCKER_PROXY_NETWORK)
+	# Create docker network if it doesn't exist 
+	docker network inspect proxy >/dev/null 2>&1 || \
+    	docker network create proxy
+
+	# Remove orphaned base container
 	docker image rm $(DOCKER_REGISTRY)/$(DOCKER_NAMESPACE)/$(DOCKER_SERVICE_PHP_BASE)-$(ENV):$(TAG)
 
 .PHONY: docker-up
