@@ -3,7 +3,7 @@ Dockerized Laravel with Octane and Swoole PHP Server, MySQL & Next.js template.
 
 ## Setup API-backend
 
-Initalize .env-configuration:
+Initalize .env configuration:
 ```bash
 cd api
 make init
