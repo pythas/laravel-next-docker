@@ -8,7 +8,7 @@ WORKDIR /var/www/html
 
 ENV HOST 0.0.0.0
 
-# Expose the Nuxt port
+# Expose the Next.js port
 EXPOSE 3000
 
 # Export the Vite port
