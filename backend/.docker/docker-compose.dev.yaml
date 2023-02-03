@@ -1,0 +1,22 @@
+services:
+  backend:
+    volumes:
+      - ../src:/var/www/html
+    ports:
+      - 8000:8000
+      
+  queue:
+    volumes:
+      - ../src:/var/www/html
+
+  schedule:
+    volumes:
+      - ../src:/var/www/html
+
+  mysql:
+    ports:
+      - 3306:3306
+
+  redis:
+    ports:
+      - 6379:6379

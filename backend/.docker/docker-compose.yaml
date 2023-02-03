@@ -1,21 +1,19 @@
 services:
-  api:
-    image: ${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/api-${ENV?}:${TAG?}
+  backend:
+    image: ${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/backend-${ENV?}:${TAG?}
     build:
       context: ./
-      dockerfile: ./images/api/Dockerfile
+      dockerfile: ./images/backend/Dockerfile
       target: ${ENV?}
       args:
         - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
-    container_name: ${APP_NAME}-api-${ENV}
+    container_name: backend-${ENV}
     links:
       - mysql
       - redis
-    hostname: api
-    ports:
-      - 8000:8000
+    hostname: backend
     networks:
-      - api
+      - backend
       - proxy
     restart: unless-stopped
   
@@ -27,12 +25,12 @@ services:
       target: ${ENV?}
       args:
         - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
-    container_name: ${APP_NAME}-queue-${ENV}
+    container_name: queue-${ENV}
     links:
       - mysql
       - redis
     networks:
-      - api
+      - backend
 
   schedule:
     image: ${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/schedule-${ENV?}:${TAG?}
@@ -42,40 +40,36 @@ services:
       target: ${ENV?}
       args:
         - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
-    container_name: ${APP_NAME}-schedule-${ENV}
+    container_name: schedule-${ENV}
     links:
       - mysql
       - redis
     networks:
-      - api
+      - backend
   
   mysql:
     image: mysql:latest
-    container_name: ${APP_NAME}-mysql-${ENV}
+    container_name: mysql-${ENV}
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_USER=${DB_USERNAME}
       - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./data/mysql:/var/lib/mysql
-    ports:
-      - 3306:3306
     networks:
-      - api
+      - backend
 
   redis:
     image: redis:latest
-    container_name: ${APP_NAME}-redis-${ENV}
+    container_name: redis-${ENV}
     volumes:
       - ./data/redis:/data
-    ports:
-      - 6379:6379
     networks:
-      - api
+      - backend
 
 networks:
-  api:
-    name: api
+  backend:
+    name: backend
 
   proxy:
     name: proxy

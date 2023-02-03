@@ -1,0 +1,7 @@
+services:
+  frontend:
+    volumes:
+      - ../src:/var/www/html
+    ports:
+      - 3000:3000
+      - 24678:24678

@@ -1,0 +1,21 @@
+services:
+  frontend:
+    image: ${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/frontend-${ENV?}:${TAG?}
+    build:
+      context: ./
+      dockerfile: ./images/frontend/Dockerfile
+      target: ${ENV?}
+    container_name: frontend-${ENV}
+    hostname: frontend
+    networks:
+      - frontend
+      - proxy
+    restart: unless-stopped
+
+networks:
+  frontend:
+    name: frontend
+
+  proxy:
+    name: proxy
+    external: true

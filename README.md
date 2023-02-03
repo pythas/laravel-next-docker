@@ -1,11 +1,11 @@
 # Docker Laravel + Next.js template
 Dockerized Laravel with Octane and Swoole PHP Server, MySQL & Next.js template.
 
-## Setup API-backend
+## Setup backend
 
 Initalize .env configuration:
 ```bash
-cd api
+cd backend
 make init
 ```
 
