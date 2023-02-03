@@ -1,0 +1,82 @@
+services:
+  api:
+    image: ${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/api-${ENV?}:${TAG?}
+    build:
+      context: ./
+      dockerfile: ./images/api/Dockerfile
+      target: ${ENV?}
+      args:
+        - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
+    container_name: ${APP_NAME}-api-${ENV}
+    links:
+      - mysql
+      - redis
+    hostname: api
+    ports:
+      - 8000:8000
+    networks:
+      - api
+      - proxy
+    restart: unless-stopped
+  
+  queue:
+    image: ${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/queue-${ENV?}:${TAG?}
+    build:
+      context: ./
+      dockerfile: ./images/queue/Dockerfile
+      target: ${ENV?}
+      args:
+        - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
+    container_name: ${APP_NAME}-queue-${ENV}
+    links:
+      - mysql
+      - redis
+    networks:
+      - api
+
+  schedule:
+    image: ${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/schedule-${ENV?}:${TAG?}
+    build:
+      context: ./
+      dockerfile: ./images/schedule/Dockerfile
+      target: ${ENV?}
+      args:
+        - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
+    container_name: ${APP_NAME}-schedule-${ENV}
+    links:
+      - mysql
+      - redis
+    networks:
+      - api
+  
+  mysql:
+    image: mysql:latest
+    container_name: ${APP_NAME}-mysql-${ENV}
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - api
+
+  redis:
+    image: redis:latest
+    container_name: ${APP_NAME}-redis-${ENV}
+    volumes:
+      - ./data/redis:/data
+    ports:
+      - 6379:6379
+    networks:
+      - api
+
+networks:
+  api:
+    name: api
+
+  proxy:
+    name: ${DOCKER_PROXY_NETWORK}
+    external: true
