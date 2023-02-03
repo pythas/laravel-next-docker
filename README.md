@@ -1,5 +1,5 @@
 # Docker Laravel + Next.js template
-Dockerized Laravel with Octane and Swoole PHP Server, MySQL & Next.js template. Uses a makefile for some better DX.
+Dockerized Laravel with Octane and Swoole PHP Server, MySQL & Next.js template. Uses a makefile for some better DX. Only requires docker to be installed on the host.
 
 ## Setup backend
 
