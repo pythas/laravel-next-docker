@@ -23,7 +23,7 @@ Start the containers:
 make docker-up
 ```
 
-To rebuild the containers:
+Rebuild the containers:
 
 ```bash
 make docker-build
@@ -51,7 +51,7 @@ Start the containers:
 make docker-up
 ```
 
-To rebuild the containers:
+Rebuild the containers:
 
 ```bash
 make docker-build
