@@ -3,7 +3,7 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
--include .make/.env
+-include .env
 -include .docker/.env
 
 DEFAULT_GOAL := help
@@ -35,10 +35,10 @@ help:
 
 .PHONY: init
 init:
-	@cp .make/.env.example .make/.env
+	@cp .env.example .env
 	@cp .docker/.env.example .docker/.env
 
-	@printf "Created `tput setaf 4`.make/.env`tput sgr0`\n"
+	@printf "Created `tput setaf 4`.env`tput sgr0`\n"
 	@printf "Created `tput setaf 4`.docker/.env`tput sgr0`\n"
 	@printf "\n"
 	@printf "Update the .env files with your settings before running any other targets.\n"
