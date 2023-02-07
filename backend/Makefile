@@ -72,7 +72,7 @@ install: docker-build
 
 # Configure Octane
 	$(DOCKER_COMPOSE) run --rm --no-deps $(DOCKER_SERVICE_BACKEND) \
-	    php artisan octane:install --server=swoole
+		php artisan octane:install --server=swoole
 
 .PHONY: docker-build-php
 docker-build-php: validate
