@@ -86,7 +86,7 @@ docker-build-image: validate
 docker-build: docker-build-php docker-build-image
 # Create docker network if it doesn't exist 
 	docker network inspect proxy >/dev/null 2>&1 || \
-    	docker network create proxy
+    		docker network create proxy
 
 # Remove orphaned base container
 	docker image rm $(DOCKER_REGISTRY)/$(DOCKER_NAMESPACE)/$(DOCKER_SERVICE_PHP_BASE)-$(ENV):$(TAG)
