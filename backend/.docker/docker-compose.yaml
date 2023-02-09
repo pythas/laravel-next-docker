@@ -7,7 +7,7 @@ services:
       target: ${ENV?}
       args:
         - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
-    container_name: backend-${ENV}
+    container_name: ${COMPOSE_PROJECT_NAME}_backend-${ENV}
     links:
       - mysql
       - redis
@@ -25,7 +25,7 @@ services:
       target: ${ENV?}
       args:
         - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
-    container_name: queue-${ENV}
+    container_name: ${COMPOSE_PROJECT_NAME}_queue-${ENV}
     links:
       - mysql
       - redis
@@ -40,7 +40,7 @@ services:
       target: ${ENV?}
       args:
         - BASE_IMAGE=${DOCKER_REGISTRY?}/${DOCKER_NAMESPACE?}/php-base-${ENV?}:${TAG?}
-    container_name: schedule-${ENV}
+    container_name: ${COMPOSE_PROJECT_NAME}_schedule-${ENV}
     links:
       - mysql
       - redis
@@ -49,7 +49,7 @@ services:
   
   mysql:
     image: mysql:latest
-    container_name: mysql-${ENV}
+    container_name: ${COMPOSE_PROJECT_NAME}_mysql-${ENV}
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_USER=${DB_USERNAME}
@@ -62,7 +62,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: redis-${ENV}
+    container_name: ${COMPOSE_PROJECT_NAME}_redis-${ENV}
     volumes:
       - ./data/redis:/data
     networks:
