@@ -5,7 +5,7 @@ services:
       context: ./
       dockerfile: ./images/frontend/Dockerfile
       target: ${ENV?}
-    container_name: frontend-${ENV}
+    container_name: ${COMPOSE_PROJECT_NAME}_frontend-${ENV}
     hostname: frontend
     networks:
       - frontend
